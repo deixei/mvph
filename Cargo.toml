@@ -1,0 +1,12 @@
+[package]
+name = "mvph"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Move Photos and videos"
+repository = "https://dev.azure.com/demo"
+homepage = "https://dev.azure.com/demo"
+
+[dependencies]
+rayon = "1.5"
+chrono = "0.4"
