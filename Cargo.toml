@@ -8,5 +8,6 @@ repository = "https://dev.azure.com/demo"
 homepage = "https://dev.azure.com/demo"
 
 [dependencies]
+clap = "4.0"
 rayon = "1.5"
 chrono = "0.4"
