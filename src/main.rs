@@ -5,10 +5,43 @@ use chrono::{DateTime, Local};
 use rayon::prelude::*;
 use std::collections::HashMap;
 use std::io;
+use clap::{Arg, Command};
 
 fn main() -> io::Result<()> {
-    let src_dir = "C:\\Users\\marcio\\deixei\\Pictures";
-    let dest_dir = "C:\\dev\\temp";
+    let matches = Command::new("mvph")
+        .version("1.0")
+        .author("Your Name <your.email@deixei.com>")
+        .about("Move Photos and Videos")
+        .arg(Arg::new("src")
+            .short('s')
+            .long("source")
+            .value_name("SOURCE")
+            .help("Sets the source directory")
+            .required(true)
+            .takes_value(true))
+        .arg(Arg::new("dest")
+            .short('d')
+            .long("destination")
+            .value_name("DESTINATION")
+            .help("Sets the destination directory")
+            .required(true)
+            .takes_value(true))
+        .get_matches();
+
+    let src_dir = matches.value_of("src").unwrap();
+    let dest_dir = matches.value_of("dest").unwrap();
+
+    // Validate source directory
+    if !Path::new(src_dir).exists() {
+        eprintln!("Source directory does not exist: {}", src_dir);
+        std::process::exit(1);
+    }
+
+    // Validate destination directory
+    if !Path::new(dest_dir).exists() {
+        eprintln!("Destination directory does not exist: {}", dest_dir);
+        std::process::exit(1);
+    }
 
     // Step 1: Gather metadata and sort files
     let mut file_map: HashMap<String, Vec<String>> = HashMap::new();
@@ -21,7 +54,7 @@ fn main() -> io::Result<()> {
             if let Ok(metadata) = fs::metadata(&path) {
                 let created = metadata.created().unwrap_or(SystemTime::now());
                 let datetime: DateTime<Local> = created.into();
-                let date_str = datetime.format("%Y/%m/%Y%m%d").to_string();
+                let date_str = datetime.format("%Y/%m/%d").to_string();
 
                 file_map.entry(date_str).or_insert_with(Vec::new).push(path.to_string_lossy().to_string());
             }
