@@ -54,7 +54,7 @@ fn main() -> io::Result<()> {
             if let Ok(metadata) = fs::metadata(&path) {
                 let created = metadata.created().unwrap_or(SystemTime::now());
                 let datetime: DateTime<Local> = created.into();
-                let date_str = datetime.format("%Y/%m/%d").to_string();
+                let date_str = datetime.format("%Y/%m/%Y%m%d").to_string();
 
                 file_map.entry(date_str).or_insert_with(Vec::new).push(path.to_string_lossy().to_string());
             }
